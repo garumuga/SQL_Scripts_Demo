@@ -2,7 +2,6 @@
 
 ALTER TABLE dbo.nova_DBAUTOMATION_POC4 ADD  DemoLocation varchar(255);
 
-
 ALTER TABLE nova_DBAUTOMATION_POC5 DROP COLUMN DemoDate,DemoName;
 
 --Create Table script for new tables

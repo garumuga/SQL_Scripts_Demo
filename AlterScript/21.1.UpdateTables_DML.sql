@@ -1,6 +1,5 @@
 --Insert Script For Existing Tables
 
-
 INSERT INTO nova_DBAUTOMATION_POC1 VALUES('2','NovaDBAutomation2',GETDATE())
 
 INSERT INTO nova_DBAUTOMATION_POC1 VALUES('3','NovaDBAutomation3',GETDATE())
