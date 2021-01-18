@@ -31,6 +31,7 @@ CREATE TABLE nova_DBAUTOMATION_POC14 (
      DemoDate DATETIME
 );
 
+
 CREATE TABLE nova_DBAUTOMATION_POC15 (
      DemoId int,
      DemoName VARCHAR(255),
