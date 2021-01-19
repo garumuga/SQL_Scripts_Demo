@@ -1,0 +1,74 @@
+pool:
+  name: Azure Pipelines
+steps:
+- powershell: |
+   $a = git diff-tree --diff-filter=ACMRTUXB --no-commit-id --name-only -r $(Build.SourceVersion)  
+   Write-Host "##vso[task.setvariable variable=Publish_Files]$a"
+   Write-Host $a
+   $string = $a
+   $array = $string -split "\s+"
+   
+   $DDL_Index = (0..($array.Count-1)) | where {$array[$_] -match "_DDL.sql"}
+   
+   $DML_Index = (0..($array.Count-1)) | where {$array[$_] -match "_DML.sql"}
+   
+   $OBJECT_Index = (0..($array.Count-1)) | where {$array[$_] -match "_OBJECT.sql"}
+   
+   
+   
+   Write-Host $array
+   if($DDL_Index.Length -gt 0)
+   {
+   
+   foreach ($index in $DDL_Index) {
+   
+   Write-Host $array[$index]
+   $name = $array[$index]
+    $changedFileName = "$(Build.SourcesDirectory)\$name"
+       $reversedPath = $array[$index][-1..-$array[$index].Length] -join ''
+   $pos = $reversedPath.IndexOf("/")
+   
+   $path = $reversedPath.Substring(0, $pos)
+   $finalFileNameOnly = $path[-1..-$array[$index].Length] -join ''
+   
+   Write-Host "Hi $finalFileNameOnly"
+   Write-Host "Hi $changedFileName"
+     Copy-Item -Path "$changedFileName" -Destination "$(Build.ArtifactStagingDirectory)\$finalFileNameOnly"
+   }
+   }
+   
+   if($DML_Index.Length -gt 0)
+   {
+   
+   foreach ($index in $DML_Index) {
+    $changedFileName = "$(Build.SourcesDirectory)\$array[$index]"
+       $reversedPath = $array[$index][-1..-$array[$index].Length] -join ''
+   $pos = $reversedPath.IndexOf("/")
+   
+   $path = $reversedPath.Substring(0, $pos)
+   $finalFileNameOnly = $path[-1..-$array[$index].Length] -join ''
+     Copy-Item -Path "$changedFileName" -Destination "$(Build.ArtifactStagingDirectory)\$finalFileNameOnly"
+   }
+   }
+   
+   if($OBJECT_Index.Length -gt 0)
+   {
+   
+   foreach ($index in $OBJECT_Index) {
+    $changedFileName = "$(Build.SourcesDirectory)\$array[$index]"
+       $reversedPath = $array[$index][-1..-$array[$index].Length] -join ''
+   $pos = $reversedPath.IndexOf("/")
+   
+   $path = $reversedPath.Substring(0, $pos)
+   $finalFileNameOnly = $path[-1..-$array[$index].Length] -join ''
+     Copy-Item -Path "$changedFileName" -Destination "$(Build.ArtifactStagingDirectory)\$finalFileNameOnly"
+   }
+   }
+  displayName: 'PowerShell Script'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: Drop
+
