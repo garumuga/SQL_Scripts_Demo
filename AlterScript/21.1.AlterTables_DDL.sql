@@ -6,6 +6,8 @@ ALTER TABLE nova_DBAUTOMATION_POC5 DROP COLUMN DemoDate,DemoName;
 
 
 
+
+
 --Create Table script for new tables
 
 CREATE TABLE nova_DBAUTOMATION_POC11 (
